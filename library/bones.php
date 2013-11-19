@@ -16,6 +16,22 @@ and tools. I put it up here so it's
 right up top and clean.
 *********************/
 
+//I define some constants that i use in the whole theme
+define('LIB_URL' , get_stylesheet_directory_uri() .'/library/');
+define('LIB_DIRECTORY' ,  dirname(__FILE__));
+define('AJAX_URL' , get_stylesheet_directory_uri() .'/library/ajax');
+define('IMG_URL' , get_stylesheet_directory_uri() .'/library/images');
+define('THEME_JS' , get_stylesheet_directory_uri() .'/library/js');
+//You develop with codekit?
+if( isset($_GET['codekitCB']))
+{
+	define('THEME_V' , $_GET['codekitCB']);
+}
+else
+{	
+	define('THEME_V' , '1.0');
+}	
+
 // we're firing all out initial functions at the start
 add_action( 'after_setup_theme', 'bones_ahoy', 16 );
 
@@ -23,12 +39,12 @@ function bones_ahoy() {
 
 	// launching operation cleanup
 	add_action( 'init', 'bones_head_cleanup' );
-	// remove WP version from RSS
-	add_filter( 'the_generator', 'bones_rss_version' );
+
 	// remove pesky injected css for recent comments widget
 	add_filter( 'wp_head', 'bones_remove_wp_widget_recent_comments_style', 1 );
 	// clean up comment styles in the head
 	add_action( 'wp_head', 'bones_remove_recent_comments_style', 1 );
+	
 	// clean up gallery output in wp
 	add_filter( 'gallery_style', 'bones_gallery_style' );
 
@@ -78,10 +94,7 @@ function bones_head_cleanup() {
 	remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
 	// WP version
 	remove_action( 'wp_head', 'wp_generator' );
-	// remove WP version from css
-	add_filter( 'style_loader_src', 'bones_remove_wp_ver_css_js', 9999 );
-	// remove Wp version from scripts
-	add_filter( 'script_loader_src', 'bones_remove_wp_ver_css_js', 9999 );
+
 
 } /* end bones head cleanup */
 

@@ -381,4 +381,45 @@ function bones_get_the_author_posts_link() {
 	return $link;
 }
 
+/**
+ * Fix to add Custom post types to nav menu
+ * If you custom post is called "concepts"
+ * create a new empty page called concepts and add this
+ */
+ function additional_active_item_classes($classes = array(), $menu_item = false){
+    global $wp_query;
+
+
+    if(in_array('current-menu-item', $menu_item->classes)){
+        $classes[] = 'current-menu-item';
+    }
+
+    if ( $menu_item->title == 'CONCEPTS' && is_post_type_archive('concepts') ) {
+        $classes[] = 'current-menu-item';
+    }
+
+    if ( $menu_item->title == 'CONCEPTS' && is_singular('concepts') ) {
+        $classes[] = 'current-menu-item';
+    }
+
+
+    return $classes;
+}
+add_filter( 'nav_menu_css_class', 'additional_active_item_classes', 10, 2 );
+
+/**
+ * Filter posts per pages depending on the post type
+ */
+ add_filter('pre_option_posts_per_page', 'limit_posts_per_page');
+function limit_posts_per_page( $posts_per_page ) {
+	# for whatever reason is_category('foo') isn't working here. Instead you can use:
+	global $wp_query;
+
+	if ( $wp_query->query_vars['post_type'] == 'concepts')
+	{
+	        return 3;
+    }
+
+        return $posts_per_page;
+}
 ?>
